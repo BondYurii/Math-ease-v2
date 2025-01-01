@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Real-Time LaTeX to Math</title>
+		<link rel="stylesheet" href="../style.css" />
+		<script src="https://unpkg.com/mathjs@14.0.1/lib/browser/math.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+		<script src="https://unpkg.com/mathlive/dist/mathlive.min.js"></script>
+		<style>
+			#latexInput {
+				width: 45%;
+				height: 80%;
+				padding: 10px;
+				font-size: 18px;
+				border: 1px solid #ccc;
+				resize: none;
+				flex-grow: 1;
+			}
+
+			.math-container {
+				display: inline-block;
+				vertical-align: top;
+				width: 45%;
+				height: 80%;
+				padding: 10px;
+				font-size: -webkit-xxx-large;
+				border: 1px solid #ccc;
+				background-color: #f0f0f0;
+				text-align: center;
+				flex-grow: 1;
+			}
+			#mathOutput {
+				width: 100%;
+			}
+			.container {
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="top-bar" id="drag-region">
+			<div class="three-dots">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div class="close-btn" id="close-btn"><img width="12px" height="12px" src="../../assets/svgs/times.svg" /></div>
+		</div>
+		<div class="container">
+			<textarea id="latexInput" placeholder="Write LaTeX here..."></textarea>
+			<div class="math-container">
+				<math-field id="mathOutput"></math-field>
+			</div>
+		</div>
+
+		<div id="latex_svg"></div>
+		<script src="renderer.js"></script>
+		<script src="../modules/window.js"></script>
+	</body>
+</html>

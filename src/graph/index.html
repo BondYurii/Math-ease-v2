@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Graph in browser</title>
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self';" /> -->
+		<meta charset="UTF-8" />
+		<!-- <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script> -->
+		<link rel="stylesheet" href="../style.css" />
+		<script type="text/javascript" src="https://www.desmos.com/api/v1.9/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
+	</head>
+
+	<body>
+		<div class="top-bar" id="drag-region">
+			<div class="three-dots">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div class="close-btn" id="close-btn"><img width="12px" height="12px" src="../../assets/svgs/times.svg" /></div>
+		</div>
+		<div class="container">
+			<div id="calculator" style="width: 100%; height: 100%"></div>
+		</div>
+
+		<script type="text/javascript" src="renderer.js"></script>
+		<script src="../modules/window.js"></script>
+	</body>
+</html>

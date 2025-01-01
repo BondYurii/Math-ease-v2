@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Math Ease Toolbar</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="toolbar">
+			<!-- info-->
+			<div class="icon-container" onclick="createInfoWindow(this)" title="Handwriting Recognition">
+				<img src="../assets/icons/1.png" alt="Handwriting Icon" class="icon-image" />
+			</div>
+
+			<!-- Add Handwriting  -->
+			<div class="icon-container" onclick="showOcr(this)" title="Add Equation">
+				<img src="../assets/icons/2.png" alt="Add Equation Icon" class="icon-image" />
+			</div>
+
+			<!-- Graph Icon -->
+			<div class="icon-container" onclick="showGraph(this)" title="Show Graph">
+				<img src="../assets/icons/3.png" alt="Graph Icon" class="icon-image" />
+			</div>
+
+			<!-- Whiteboard Icon -->
+			<div class="icon-container" onclick="showWhiteboard(this)" title="Open Whiteboard">
+				<img src="../assets/icons/5.png" alt="Whiteboard Icon" class="icon-image" />
+			</div>
+
+			<!-- Add latex Icon -->
+			<div class="icon-container" onclick="showLatex(this)" title="Add Note">
+				<img src="../assets/icons/6.png" alt="Add Note Icon" class="icon-image" />
+			</div>
+
+			<!-- Copy SVG Icon -->
+			<div class="icon-container" onclick="edit()" title="edit">
+				<img src="../assets/icons/edit.png" alt="edit" class="icon-image" />
+			</div>
+
+			<!-- Edit SVG Icon -->
+			<div class="icon-container" onclick="copy()" title="Copy">
+				<img src="../assets/icons/copy.png" alt="Copy SVG Icon" class="icon-image" />
+			</div>
+		</div>
+		<!-- Toast Notification -->
+		<div id="toast" class="toast">SVG copied to clipboard!</div>
+
+		<script src="renderer.js"></script>
+	</body>
+</html>
