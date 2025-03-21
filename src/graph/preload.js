@@ -12,5 +12,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	setScreenSize: (isMaximized) => ipcRenderer.send('set-screen-size', {isMaximized, type: 'graph'}),
 	send: (message, args) => {
 		ipcRenderer.send(message, args);
-	},
+	}
 });
