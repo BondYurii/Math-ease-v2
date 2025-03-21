@@ -6,10 +6,10 @@ function createToolbarWindow() {
 	const size = screen.getPrimaryDisplay().workAreaSize;
 
 	let toolbarWindow = new BrowserWindow({
-		width: Math.min(400, size.width * 0.9),
-		height: 80,
+		width: Math.min(500, size.width * 0.9),
+		height: 150,
 		x: (size.width - Math.min(400, size.width * 0.9)) / 2,
-		y: size.height - 90,
+		y: size.height - 160,
 		webPreferences: {
 			preload: path.join(__dirname, '../preload.js'), //  We use Preload to increase security
 			nodeIntegration: true,
