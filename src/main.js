@@ -58,6 +58,22 @@ ipcMain.on('show-graph', () => {
 	closeOtherWindowsExcept('graph');
 });
 
+ipcMain.on('show-geometrie', () => {
+	graphWindow = showGraphWindow(graphWindow, toolbarWindow);
+	closeOtherWindowsExcept('graph');
+	if (graphWindow) {
+		graphWindow.webContents.send('activate-geometrie');
+	}
+});
+
+ipcMain.on('show-threed', () => {
+	graphWindow = showGraphWindow(graphWindow, toolbarWindow);
+	closeOtherWindowsExcept('graph');
+	if (graphWindow) {
+		graphWindow.webContents.send('activate-threed');
+	}
+});
+
 //Dealing with window switching messages
 ipcMain.on('show-whiteboard', () => {
 	whiteboardWindow = showWiteboardWindow(whiteboardWindow, toolbarWindow);
@@ -87,6 +103,12 @@ const closeOtherWindowsExcept = (theType) => {
 		whiteboard: whiteboardWindow,
 		ocr: ocrWindow,
 	};
+	
+	// Treat 'geometrie' and 'threed' as 'graph' since they share the same window
+	if (theType === 'geometrie' || theType === 'threed') {
+		theType = 'graph';
+	}
+	
 	for (const [key, value] of Object.entries(keys)) {
 		if (key !== theType && value && !value.isDestroyed()) {
 			value.hide();
@@ -114,6 +136,16 @@ ipcMain.on('close', (event, type) => {
 		case 'graph': {
 			graphWindow.close();
 			toolbarWindow.webContents.send('closing-window', 'graph');
+			break;
+		}
+		case 'geometrie': {
+			graphWindow.close();
+			toolbarWindow.webContents.send('closing-window', 'geometrie');
+			break;
+		}
+		case 'threed': {
+			graphWindow.close();
+			toolbarWindow.webContents.send('closing-window', 'threed');
 			break;
 		}
 		case 'whiteboard': {
@@ -150,8 +182,22 @@ ipcMain.on('copy', (event) => {
 		ipcMain.once('send-svg-to-main', async (event, {svgString, type, data}) => {
 			const timestamp = Date.now();
 			try {
-				const pngBuffer = await sharp(Buffer.from(svgString)).png({quality: 100}).toBuffer();
-				const image = nativeImage.createFromBuffer(pngBuffer);
+				let pngBuffer;
+				let image;
+				
+				if (type === 'geometrie' || type === 'threed') {
+					if (svgString.startsWith('data:image')) {
+						const base64Data = svgString.split(',')[1];
+						const imageBuffer = Buffer.from(base64Data, 'base64');
+						image = nativeImage.createFromBuffer(imageBuffer);
+					} else {
+						image = nativeImage.createFromBuffer(Buffer.from(svgString));
+					}
+				} else {
+					pngBuffer = await sharp(Buffer.from(svgString)).png({quality: 100}).toBuffer();
+					image = nativeImage.createFromBuffer(pngBuffer);
+				}
+				
 				clipboard.writeImage(image);
 				const hash = calculateHash(image.toPNG());
 				await csvWriter.writeRecords([{timestamp, type, data: stringify(data), hash, svgString}]);
@@ -202,6 +248,44 @@ const handleEdit = (type, contentData) => {
 				});
 			} else {
 				graphWindow.webContents.send('content-data', contentData);
+			}
+			break;
+		}
+		case 'geometrie': {
+			const isDestroyed = graphWindow === null || graphWindow.isDestroyed();
+			graphWindow = showGraphWindow(graphWindow, toolbarWindow);
+			toolbarWindow.webContents.send('active-window', 'graph');
+			if (isDestroyed) {
+				graphWindow.webContents.on('did-finish-load', () => {
+					graphWindow.webContents.send('activate-geometrie');
+					setTimeout(() => {
+						graphWindow.webContents.send('content-data', contentData);
+					}, 100);
+				});
+			} else {
+				graphWindow.webContents.send('activate-geometrie');
+				setTimeout(() => {
+					graphWindow.webContents.send('content-data', contentData);
+				}, 100);
+			}
+			break;
+		}
+		case 'threed': {
+			const isDestroyed = graphWindow === null || graphWindow.isDestroyed();
+			graphWindow = showGraphWindow(graphWindow, toolbarWindow);
+			toolbarWindow.webContents.send('active-window', 'graph');
+			if (isDestroyed) {
+				graphWindow.webContents.on('did-finish-load', () => {
+					graphWindow.webContents.send('activate-threed');
+					setTimeout(() => {
+						graphWindow.webContents.send('content-data', contentData);
+					}, 100);
+				});
+			} else {
+				graphWindow.webContents.send('activate-threed');
+				setTimeout(() => {
+					graphWindow.webContents.send('content-data', contentData);
+				}, 100);
 			}
 			break;
 		}

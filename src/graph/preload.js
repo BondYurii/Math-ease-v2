@@ -9,6 +9,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onContentData: (callback) => {
 		ipcRenderer.on('content-data', (event, data) => callback(data));
 	},
+	onActivateGeometrie: (callback) => {
+		ipcRenderer.on('activate-geometrie', () => callback());
+	},
+	onActivateThreed: (callback) => {
+		ipcRenderer.on('activate-threed', () => callback());
+	},
 	setScreenSize: (isMaximized) => ipcRenderer.send('set-screen-size', {isMaximized, type: 'graph'}),
 	send: (message, args) => {
 		ipcRenderer.send(message, args);
