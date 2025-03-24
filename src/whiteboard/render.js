@@ -1,5 +1,15 @@
-const {ipcRenderer} = require('electron/renderer');
-document.getElementById('close-btn').addEventListener('click', () => {
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import { Excalidraw, exportToSvg } from '@excalidraw/excalidraw';
+// Fix for CSS path
+const electron = require('electron');
+const { ipcRenderer } = electron;
+
+// Set assets path for Excalidraw - this needs to happen before component mounts
+window.EXCALIDRAW_ASSET_PATH = "./libs/excalidraw-assets/";
+
+// Setup close button handler
+document.getElementById('close-btn')?.addEventListener('click', () => {
 	ipcRenderer.send('close', 'whiteboard');
 });
 const App = () => {

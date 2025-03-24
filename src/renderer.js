@@ -130,3 +130,48 @@ window.electronAPI.on('active-window', (type) => {
 		element.classList.add('active');
 	}
 });
+
+// Toggle dropdown menu
+function toggleDropdown(element) {
+    // Close all other dropdowns first
+    const dropdowns = document.getElementsByClassName('dropdown-content');
+    for (let dropdown of dropdowns) {
+        if (dropdown !== element.nextElementSibling && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+    
+    // Toggle the clicked dropdown
+    const dropdownContent = element.nextElementSibling;
+    dropdownContent.classList.toggle('show');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.matches('.icon-image')) {
+        const dropdowns = document.getElementsByClassName('dropdown-content');
+        for (let dropdown of dropdowns) {
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+});
+
+// Close the application
+function closeApp(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    window.electronAPI.closeApp();
+}
+
+// Handle keyboard shortcuts
+window.electronAPI.onTriggerCopy(() => {
+    copy();
+});
+
+window.electronAPI.onTriggerEdit(() => {
+    window.electronAPI.edit();
+});

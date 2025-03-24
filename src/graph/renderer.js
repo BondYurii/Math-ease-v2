@@ -12,6 +12,15 @@ document.getElementById('graph-tab').addEventListener('click', showGraphCalculat
 document.getElementById('geometrie-tab').addEventListener('click', showGeometrieCalculator);
 document.getElementById('3d-tab').addEventListener('click', show3DCalculator);
 
+// Handle keyboard shortcuts
+window.electronAPI.onTriggerCopy(() => {
+	window.electronAPI.send('copy');
+});
+
+window.electronAPI.onTriggerEdit(() => {
+	window.electronAPI.send('edit');
+});
+
 // Function to switch calculator modes
 function switchCalculatorMode(mode) {
 	// Save state if needed for future implementation

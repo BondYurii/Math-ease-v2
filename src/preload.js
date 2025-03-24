@@ -13,4 +13,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	on: (channel, func) => {
 		ipcRenderer.on(channel, (event, ...args) => func(...args));
 	},
+	onTriggerCopy: (func) => {
+		ipcRenderer.on('trigger-copy', () => func());
+	},
+	onTriggerEdit: (func) => {
+		ipcRenderer.on('trigger-edit', () => func());
+	}
 });

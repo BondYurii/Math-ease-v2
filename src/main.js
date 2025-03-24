@@ -193,6 +193,23 @@ ipcMain.on('copy', (event) => {
 					} else {
 						image = nativeImage.createFromBuffer(Buffer.from(svgString));
 					}
+				} else if (type === 'whiteboard') {
+					// Whiteboard sends XML SVG string directly
+					try {
+						// First try converting directly with sharp
+						pngBuffer = await sharp(Buffer.from(svgString)).png({quality: 100}).toBuffer();
+						image = nativeImage.createFromBuffer(pngBuffer);
+					} catch (error) {
+						console.error('Error processing whiteboard SVG:', error);
+						// Fallback method - create a data URL from SVG and process it
+						const svgHeader = 'data:image/svg+xml;base64,';
+						const base64Data = Buffer.from(svgString).toString('base64');
+						const dataUrl = svgHeader + base64Data;
+						
+						// Create image from data URL
+						const imageBuffer = Buffer.from(base64Data, 'base64');
+						image = nativeImage.createFromBuffer(imageBuffer);
+					}
 				} else {
 					pngBuffer = await sharp(Buffer.from(svgString)).png({quality: 100}).toBuffer();
 					image = nativeImage.createFromBuffer(pngBuffer);
@@ -383,6 +400,28 @@ ipcMain.on('edit', async (event) => {
 app.whenReady().then(async () => {
 	toolbarWindow = createToolbarWindow();
 	strokesSessionId = await getStrokeSessionId();
+
+	// Register keyboard shortcuts
+	const { globalShortcut } = require('electron');
+	
+	// Register Ctrl+C for copy
+	globalShortcut.register('CommandOrControl+C', () => {
+		// Get the currently focused window
+		const focusedWindow = BrowserWindow.getFocusedWindow();
+		if (focusedWindow) {
+			focusedWindow.webContents.send('trigger-copy');
+		}
+	});
+
+	// Register Ctrl+V for paste
+	globalShortcut.register('CommandOrControl+V', () => {
+		// Get the currently focused window
+		const focusedWindow = BrowserWindow.getFocusedWindow();
+		if (focusedWindow) {
+			focusedWindow.webContents.send('trigger-edit');
+		}
+	});
+
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			toolbarWindow = createToolbarWindow();

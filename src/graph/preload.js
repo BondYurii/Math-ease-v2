@@ -18,5 +18,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	setScreenSize: (isMaximized) => ipcRenderer.send('set-screen-size', {isMaximized, type: 'graph'}),
 	send: (message, args) => {
 		ipcRenderer.send(message, args);
+	},
+	onTriggerCopy: (callback) => {
+		ipcRenderer.on('trigger-copy', () => callback());
+	},
+	onTriggerEdit: (callback) => {
+		ipcRenderer.on('trigger-edit', () => callback());
 	}
 });
